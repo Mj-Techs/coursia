@@ -6,6 +6,7 @@ import {
 import UserModel from "../Schema/userSchema.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { UserMiddleware } from "../middleware/user.js";
 
 const userRouter = Router();
 
@@ -55,13 +56,8 @@ userRouter.post("/signup", async function (req, res) {
   }
 });
 
-userRouter.get("/purchases", function (req, res) {
-  const { token } = req.headers;
-  const isValid = jwt.verify(token, process.env.USER_JWT_SECRET);
-  if (!isValid) {
-    res.status(500).json({ error: "Invalid token" });
-    return;
-  }
+userRouter.get("/purchases",UserMiddleware, function (req, res) {
+  
   res.send("this is your purchased course");
 });
 
